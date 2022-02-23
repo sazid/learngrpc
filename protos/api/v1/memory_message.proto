@@ -14,5 +14,5 @@ message Memory {
   }
 
   uint64 value = 1;
-  Unit uint = 2;
+  Unit unit = 2;
 }

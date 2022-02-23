@@ -2,7 +2,7 @@ all:
 	go build main.go
 
 test:
-	go test ./...
+	go test -cover -race ./...
 
 clean:
 	rm -rf api/v1/*
