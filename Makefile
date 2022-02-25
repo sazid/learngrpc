@@ -1,5 +1,8 @@
-all:
-	go build main.go
+server:
+	go run cmd/server/server.go -port 8500
+
+client:
+	go run cmd/client/client.go -address 0.0.0.0:8500
 
 test:
 	go test -cover -race ./...

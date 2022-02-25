@@ -46,6 +46,17 @@ func (s *LaptopServer) Create(
 		laptop.Id = id.String()
 	}
 
+	if ctx.Err() == context.Canceled {
+		log.Print("request cancelled")
+		return nil, status.Error(codes.Canceled, "request cancelled")
+	}
+
+	// request timed out
+	if ctx.Err() == context.DeadlineExceeded {
+		log.Print("deadline exceeded")
+		return nil, status.Error(codes.DeadlineExceeded, "deadline exceeded")
+	}
+
 	// save the laptop to a db.
 	err := s.store.Save(laptop)
 	if err != nil {
