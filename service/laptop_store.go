@@ -10,9 +10,11 @@ import (
 )
 
 var ErrAlreadyExists = errors.New("record already exists")
+var ErrNotFound = errors.New("record not found")
 
 type LaptopStore interface {
 	Save(*v1.Laptop) error
+	Find(id string) (*v1.Laptop, error)
 }
 
 type InMemoryLaptopStore struct {
@@ -43,4 +45,18 @@ func (s *InMemoryLaptopStore) Save(laptop *v1.Laptop) error {
 	s.data[other.Id] = other
 
 	return nil
+}
+
+func (s *InMemoryLaptopStore) Find(id string) (*v1.Laptop, error) {
+	s.Lock()
+	defer s.Unlock()
+	if v, ok := s.data[id]; ok {
+		other := &v1.Laptop{}
+		err := copier.Copy(other, v)
+		if err != nil {
+			return nil, fmt.Errorf("cannot copy laptop data: %w", err)
+		}
+		return other, nil
+	}
+	return nil, ErrNotFound
 }
