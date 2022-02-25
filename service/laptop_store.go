@@ -30,7 +30,7 @@ func (s *InMemoryLaptopStore) Save(laptop *v1.Laptop) error {
 	s.Lock()
 	defer s.Unlock()
 
-	if _, ok := s.data[laptop.Id]; !ok {
+	if _, ok := s.data[laptop.Id]; ok {
 		return ErrAlreadyExists
 	}
 

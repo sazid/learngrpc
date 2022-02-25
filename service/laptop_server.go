@@ -19,8 +19,10 @@ type LaptopServer struct {
 // Makes sure that we properly implement the LaptopServer RPC service.
 var _ v1.LaptopServiceServer = (*LaptopServer)(nil)
 
-func NewLaptopServer() *LaptopServer {
-	return &LaptopServer{}
+func NewLaptopServer(store LaptopStore) *LaptopServer {
+	return &LaptopServer{
+		store: store,
+	}
 }
 
 func (s *LaptopServer) Create(
