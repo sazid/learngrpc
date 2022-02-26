@@ -4,11 +4,17 @@ package rpc;
 option go_package = "api/v1";
 
 import "laptop_message.proto";
+import "filter_message.proto";
 
 message CreateLaptopRequest { Laptop laptop = 1; }
 
 message CreateLaptopResponse { string id = 1; }
 
+message SearchLaptopRequest { Filter filter = 1; }
+
+message SearchLaptopResponse { Laptop laptop = 1; }
+
 service LaptopService {
   rpc Create(CreateLaptopRequest) returns (CreateLaptopResponse) {}
+  rpc SearchLaptop(SearchLaptopRequest) returns (stream SearchLaptopResponse) {}
 }

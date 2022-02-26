@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"io"
 	"log"
 	"time"
 
@@ -14,20 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func main() {
-	serverAddr := flag.String("address", "", "the server address")
-	flag.Parse()
-
-	log.Printf("dial server %s", *serverAddr)
-
-	creds := grpc.WithTransportCredentials(insecure.NewCredentials())
-	conn, err := grpc.Dial(*serverAddr, creds)
-	if err != nil {
-		log.Fatalf("failed to dial server: %v", err)
-	}
-
-	laptopClient := v1.NewLaptopServiceClient(conn)
-
+func createLaptop(laptopClient v1.LaptopServiceClient) {
 	laptop := sample.NewLaptop()
 	req := &v1.CreateLaptopRequest{
 		Laptop: laptop,
@@ -49,4 +37,62 @@ func main() {
 
 	newLaptopid := res.Id
 	log.Printf("new laptop id: %s", newLaptopid)
+}
+
+func searchLaptop(laptopClient v1.LaptopServiceClient, filter *v1.Filter) {
+	log.Print("search filter: ", filter)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	req := &v1.SearchLaptopRequest{Filter: filter}
+	stream, err := laptopClient.SearchLaptop(ctx, req)
+	if err != nil {
+		log.Fatalf("error requesting for search laptop stream: %v", err)
+	}
+
+	for {
+		res, err := stream.Recv()
+		if err == io.EOF {
+			return
+		}
+		if err != nil {
+			log.Fatal("cannot receive response: ", err)
+		}
+
+		laptop := res.GetLaptop()
+		log.Print("- found: ", laptop.GetId())
+		log.Print(" + brand: ", laptop.GetBrand())
+		log.Print(" + cpu: ", laptop.GetCpu())
+		log.Print(" + ram: ", laptop.GetRam())
+		log.Print(" + price: ", laptop.GetPriceUsd())
+	}
+}
+
+func main() {
+	serverAddr := flag.String("address", "", "the server address")
+	flag.Parse()
+
+	log.Printf("dial server %s", *serverAddr)
+
+	creds := grpc.WithTransportCredentials(insecure.NewCredentials())
+	conn, err := grpc.Dial(*serverAddr, creds)
+	if err != nil {
+		log.Fatalf("failed to dial server: %v", err)
+	}
+
+	laptopClient := v1.NewLaptopServiceClient(conn)
+
+	for i := 0; i < 10; i++ {
+		createLaptop(laptopClient)
+	}
+
+	filter := &v1.Filter{
+		MaxPriceUsd: 3000,
+		MinCpuCores: 4,
+		MinCpuGhz:   2.5,
+		MinRam:      &v1.Memory{Value: 8, Unit: v1.Memory_GIGABYTE},
+	}
+
+	searchLaptop(laptopClient, filter)
 }

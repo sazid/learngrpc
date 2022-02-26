@@ -19,12 +19,23 @@ class LaptopServiceStub(object):
                 request_serializer=laptop__service__pb2.CreateLaptopRequest.SerializeToString,
                 response_deserializer=laptop__service__pb2.CreateLaptopResponse.FromString,
                 )
+        self.SearchLaptop = channel.unary_stream(
+                '/rpc.LaptopService/SearchLaptop',
+                request_serializer=laptop__service__pb2.SearchLaptopRequest.SerializeToString,
+                response_deserializer=laptop__service__pb2.SearchLaptopResponse.FromString,
+                )
 
 
 class LaptopServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Create(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SearchLaptop(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +48,11 @@ def add_LaptopServiceServicer_to_server(servicer, server):
                     servicer.Create,
                     request_deserializer=laptop__service__pb2.CreateLaptopRequest.FromString,
                     response_serializer=laptop__service__pb2.CreateLaptopResponse.SerializeToString,
+            ),
+            'SearchLaptop': grpc.unary_stream_rpc_method_handler(
+                    servicer.SearchLaptop,
+                    request_deserializer=laptop__service__pb2.SearchLaptopRequest.FromString,
+                    response_serializer=laptop__service__pb2.SearchLaptopResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +78,22 @@ class LaptopService(object):
         return grpc.experimental.unary_unary(request, target, '/rpc.LaptopService/Create',
             laptop__service__pb2.CreateLaptopRequest.SerializeToString,
             laptop__service__pb2.CreateLaptopResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SearchLaptop(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/rpc.LaptopService/SearchLaptop',
+            laptop__service__pb2.SearchLaptopRequest.SerializeToString,
+            laptop__service__pb2.SearchLaptopResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

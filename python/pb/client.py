@@ -7,7 +7,9 @@ import laptop_service_pb2 as laptop_service
 
 
 def main():
-    channel = grpc.insecure_channel("localhost:8500")
+    with open("/home/szxo3/Downloads/roots.pem", "rb") as f:
+        creds = grpc.ssl_channel_credentials(root_certificates=f.read())
+    channel = grpc.secure_channel("qa.automationsolutionz.com:443", creds)
     stub = laptop_service_rpc.LaptopServiceStub(channel)
 
     laptop = generator.new_laptop()

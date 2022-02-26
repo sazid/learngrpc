@@ -1,5 +1,5 @@
 server:
-	go make cmd/server/server.go -port 8500
+	go run cmd/server/server.go -port 8500
 
 client:
 	go run cmd/client/client.go -address 0.0.0.0:8500
