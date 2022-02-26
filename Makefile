@@ -1,5 +1,5 @@
 server:
-	go run cmd/server/server.go -port 8500
+	go make cmd/server/server.go -port 8500
 
 client:
 	go run cmd/client/client.go -address 0.0.0.0:8500
@@ -22,7 +22,6 @@ gen:
 		--go-grpc_opt=paths=source_relative \
 		protos/api/v1/*.proto \
 
-genpy:
 	python -m grpc_tools.protoc \
 		-Iprotos/api/v1 \
 		--python_out=python/pb \

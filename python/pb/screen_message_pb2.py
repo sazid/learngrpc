@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14screen_message.proto\"\xcb\x01\n\x06Screen\x12\x11\n\tsize_inch\x18\x01 \x01(\x02\x12&\n\nresolution\x18\x02 \x01(\x0b\x32\x12.Screen.Resolution\x12\x1c\n\x05panel\x18\x03 \x01(\x0e\x32\r.Screen.Panel\x12\x12\n\nmultitouch\x18\x04 \x01(\x08\x1a+\n\nResolution\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\"\'\n\x05Panel\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x07\n\x03IPS\x10\x01\x12\x08\n\x04OLED\x10\x02\x42\x08Z\x06\x61pi/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14screen_message.proto\x12\x03rpc\"\xd3\x01\n\x06Screen\x12\x11\n\tsize_inch\x18\x01 \x01(\x02\x12*\n\nresolution\x18\x02 \x01(\x0b\x32\x16.rpc.Screen.Resolution\x12 \n\x05panel\x18\x03 \x01(\x0e\x32\x11.rpc.Screen.Panel\x12\x12\n\nmultitouch\x18\x04 \x01(\x08\x1a+\n\nResolution\x12\r\n\x05width\x18\x01 \x01(\r\x12\x0e\n\x06height\x18\x02 \x01(\r\"\'\n\x05Panel\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x07\n\x03IPS\x10\x01\x12\x08\n\x04OLED\x10\x02\x42\x08Z\x06\x61pi/v1b\x06proto3')
 
 
 
@@ -26,12 +26,12 @@ Screen = _reflection.GeneratedProtocolMessageType('Screen', (_message.Message,),
   'Resolution' : _reflection.GeneratedProtocolMessageType('Resolution', (_message.Message,), {
     'DESCRIPTOR' : _SCREEN_RESOLUTION,
     '__module__' : 'screen_message_pb2'
-    # @@protoc_insertion_point(class_scope:Screen.Resolution)
+    # @@protoc_insertion_point(class_scope:rpc.Screen.Resolution)
     })
   ,
   'DESCRIPTOR' : _SCREEN,
   '__module__' : 'screen_message_pb2'
-  # @@protoc_insertion_point(class_scope:Screen)
+  # @@protoc_insertion_point(class_scope:rpc.Screen)
   })
 _sym_db.RegisterMessage(Screen)
 _sym_db.RegisterMessage(Screen.Resolution)
@@ -40,10 +40,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\006api/v1'
-  _SCREEN._serialized_start=25
-  _SCREEN._serialized_end=228
-  _SCREEN_RESOLUTION._serialized_start=144
-  _SCREEN_RESOLUTION._serialized_end=187
-  _SCREEN_PANEL._serialized_start=189
-  _SCREEN_PANEL._serialized_end=228
+  _SCREEN._serialized_start=30
+  _SCREEN._serialized_end=241
+  _SCREEN_RESOLUTION._serialized_start=157
+  _SCREEN_RESOLUTION._serialized_end=200
+  _SCREEN_PANEL._serialized_start=202
+  _SCREEN_PANEL._serialized_end=241
 # @@protoc_insertion_point(module_scope)

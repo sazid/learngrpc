@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14memory_message.proto\"\x93\x01\n\x06Memory\x12\r\n\x05value\x18\x01 \x01(\x04\x12\x1a\n\x04unit\x18\x02 \x01(\x0e\x32\x0c.Memory.Unit\"^\n\x04Unit\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x07\n\x03\x42IT\x10\x01\x12\x08\n\x04\x42YTE\x10\x02\x12\x0c\n\x08KILOBYTE\x10\x03\x12\x0c\n\x08MEGABYTE\x10\x04\x12\x0c\n\x08GIGABYTE\x10\x05\x12\x0c\n\x08TERABYTE\x10\x06\x42\x08Z\x06\x61pi/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14memory_message.proto\x12\x03rpc\"\x97\x01\n\x06Memory\x12\r\n\x05value\x18\x01 \x01(\x04\x12\x1e\n\x04unit\x18\x02 \x01(\x0e\x32\x10.rpc.Memory.Unit\"^\n\x04Unit\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x07\n\x03\x42IT\x10\x01\x12\x08\n\x04\x42YTE\x10\x02\x12\x0c\n\x08KILOBYTE\x10\x03\x12\x0c\n\x08MEGABYTE\x10\x04\x12\x0c\n\x08GIGABYTE\x10\x05\x12\x0c\n\x08TERABYTE\x10\x06\x42\x08Z\x06\x61pi/v1b\x06proto3')
 
 
 
@@ -23,7 +23,7 @@ _MEMORY_UNIT = _MEMORY.enum_types_by_name['Unit']
 Memory = _reflection.GeneratedProtocolMessageType('Memory', (_message.Message,), {
   'DESCRIPTOR' : _MEMORY,
   '__module__' : 'memory_message_pb2'
-  # @@protoc_insertion_point(class_scope:Memory)
+  # @@protoc_insertion_point(class_scope:rpc.Memory)
   })
 _sym_db.RegisterMessage(Memory)
 
@@ -31,8 +31,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\006api/v1'
-  _MEMORY._serialized_start=25
-  _MEMORY._serialized_end=172
-  _MEMORY_UNIT._serialized_start=78
-  _MEMORY_UNIT._serialized_end=172
+  _MEMORY._serialized_start=30
+  _MEMORY._serialized_end=181
+  _MEMORY_UNIT._serialized_start=87
+  _MEMORY_UNIT._serialized_end=181
 # @@protoc_insertion_point(module_scope)

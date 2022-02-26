@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 import memory_message_pb2 as memory__message__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17processor_message.proto\x1a\x14memory_message.proto\"r\n\x03\x43PU\x12\r\n\x05\x62rand\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cnumber_cores\x18\x03 \x01(\r\x12\x16\n\x0enumber_threads\x18\x04 \x01(\r\x12\x0f\n\x07min_ghz\x18\x05 \x01(\x01\x12\x0f\n\x07max_ghz\x18\x06 \x01(\x01\"]\n\x03GPU\x12\r\n\x05\x62rand\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07min_ghz\x18\x03 \x01(\x01\x12\x0f\n\x07max_ghz\x18\x04 \x01(\x01\x12\x17\n\x06memory\x18\x05 \x01(\x0b\x32\x07.MemoryB\x08Z\x06\x61pi/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17processor_message.proto\x12\x03rpc\x1a\x14memory_message.proto\"r\n\x03\x43PU\x12\r\n\x05\x62rand\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cnumber_cores\x18\x03 \x01(\r\x12\x16\n\x0enumber_threads\x18\x04 \x01(\r\x12\x0f\n\x07min_ghz\x18\x05 \x01(\x01\x12\x0f\n\x07max_ghz\x18\x06 \x01(\x01\"a\n\x03GPU\x12\r\n\x05\x62rand\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0f\n\x07min_ghz\x18\x03 \x01(\x01\x12\x0f\n\x07max_ghz\x18\x04 \x01(\x01\x12\x1b\n\x06memory\x18\x05 \x01(\x0b\x32\x0b.rpc.MemoryB\x08Z\x06\x61pi/v1b\x06proto3')
 
 
 
@@ -24,14 +24,14 @@ _GPU = DESCRIPTOR.message_types_by_name['GPU']
 CPU = _reflection.GeneratedProtocolMessageType('CPU', (_message.Message,), {
   'DESCRIPTOR' : _CPU,
   '__module__' : 'processor_message_pb2'
-  # @@protoc_insertion_point(class_scope:CPU)
+  # @@protoc_insertion_point(class_scope:rpc.CPU)
   })
 _sym_db.RegisterMessage(CPU)
 
 GPU = _reflection.GeneratedProtocolMessageType('GPU', (_message.Message,), {
   'DESCRIPTOR' : _GPU,
   '__module__' : 'processor_message_pb2'
-  # @@protoc_insertion_point(class_scope:GPU)
+  # @@protoc_insertion_point(class_scope:rpc.GPU)
   })
 _sym_db.RegisterMessage(GPU)
 
@@ -39,8 +39,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\006api/v1'
-  _CPU._serialized_start=49
-  _CPU._serialized_end=163
-  _GPU._serialized_start=165
-  _GPU._serialized_end=258
+  _CPU._serialized_start=54
+  _CPU._serialized_end=168
+  _GPU._serialized_start=170
+  _GPU._serialized_end=267
 # @@protoc_insertion_point(module_scope)

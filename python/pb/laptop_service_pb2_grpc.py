@@ -15,7 +15,7 @@ class LaptopServiceStub(object):
             channel: A grpc.Channel.
         """
         self.Create = channel.unary_unary(
-                '/LaptopService/Create',
+                '/rpc.LaptopService/Create',
                 request_serializer=laptop__service__pb2.CreateLaptopRequest.SerializeToString,
                 response_deserializer=laptop__service__pb2.CreateLaptopResponse.FromString,
                 )
@@ -40,7 +40,7 @@ def add_LaptopServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'LaptopService', rpc_method_handlers)
+            'rpc.LaptopService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -59,7 +59,7 @@ class LaptopService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/LaptopService/Create',
+        return grpc.experimental.unary_unary(request, target, '/rpc.LaptopService/Create',
             laptop__service__pb2.CreateLaptopRequest.SerializeToString,
             laptop__service__pb2.CreateLaptopResponse.FromString,
             options, channel_credentials,

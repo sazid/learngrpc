@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 import memory_message_pb2 as memory__message__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15storage_message.proto\x1a\x14memory_message.proto\"l\n\x07Storage\x12\x1f\n\x06\x64river\x18\x01 \x01(\x0e\x32\x0f.Storage.Driver\x12\x17\n\x06memory\x18\x02 \x01(\x0b\x32\x07.Memory\"\'\n\x06\x44river\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x07\n\x03HDD\x10\x01\x12\x07\n\x03SSD\x10\x02\x42\x08Z\x06\x61pi/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15storage_message.proto\x12\x03rpc\x1a\x14memory_message.proto\"t\n\x07Storage\x12#\n\x06\x64river\x18\x01 \x01(\x0e\x32\x13.rpc.Storage.Driver\x12\x1b\n\x06memory\x18\x02 \x01(\x0b\x32\x0b.rpc.Memory\"\'\n\x06\x44river\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x07\n\x03HDD\x10\x01\x12\x07\n\x03SSD\x10\x02\x42\x08Z\x06\x61pi/v1b\x06proto3')
 
 
 
@@ -24,7 +24,7 @@ _STORAGE_DRIVER = _STORAGE.enum_types_by_name['Driver']
 Storage = _reflection.GeneratedProtocolMessageType('Storage', (_message.Message,), {
   'DESCRIPTOR' : _STORAGE,
   '__module__' : 'storage_message_pb2'
-  # @@protoc_insertion_point(class_scope:Storage)
+  # @@protoc_insertion_point(class_scope:rpc.Storage)
   })
 _sym_db.RegisterMessage(Storage)
 
@@ -32,8 +32,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\006api/v1'
-  _STORAGE._serialized_start=47
-  _STORAGE._serialized_end=155
-  _STORAGE_DRIVER._serialized_start=116
-  _STORAGE_DRIVER._serialized_end=155
+  _STORAGE._serialized_start=52
+  _STORAGE._serialized_end=168
+  _STORAGE_DRIVER._serialized_start=129
+  _STORAGE_DRIVER._serialized_end=168
 # @@protoc_insertion_point(module_scope)
