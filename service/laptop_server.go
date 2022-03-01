@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"time"
 
 	"github.com/google/uuid"
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -89,6 +90,8 @@ func (s *LaptopServer) SearchLaptop(
 			res := &v1.SearchLaptopResponse{
 				Laptop: laptop,
 			}
+
+			time.Sleep(time.Second)
 
 			err := stream.Send(res)
 			if err != nil {

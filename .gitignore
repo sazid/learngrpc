@@ -1,4 +1,7 @@
 *venv/
 *.cert
+*.crt
 *.pem
-__pycache__
+*.key
+**/__pycache__
+**/*.pyc

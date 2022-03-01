@@ -28,7 +28,7 @@ def search_laptop(stub: laptop_service_rpc.LaptopServiceStub, filter: filter_mes
     for res in stream:
         laptop = res.laptop
         print(f"""found {laptop.id}:
-+ RAM: {laptop.ram}
++ RAM: {laptop.ram.value} GB
 + CPU cores: {laptop.cpu.number_cores}
 + CPU freq: {laptop.cpu.min_ghz} - {laptop.cpu.max_ghz}
 + Price: {laptop.price_usd}""")
@@ -38,13 +38,14 @@ def main():
     #with open("/home/szxo3/Downloads/roots.pem", "rb") as f:
     #creds = grpc.ssl_channel_credentials()
     #channel = grpc.secure_channel("qa.automationsolutionz.com:20001", creds)
-    channel = grpc.insecure_channel("qa.automationsolutionz.com:20001")
+    # channel = grpc.insecure_channel("qa.automationsolutionz.com:20001")
+    channel = grpc.insecure_channel("localhost:8500")
     stub = laptop_service_rpc.LaptopServiceStub(channel)
 
     try:
-        for i in range(10):
+        for _ in range(10):
             create_laptop(stub)
-    
+
         search_laptop(stub, filter_message_pb2.Filter(
             max_price_usd=1500,
             min_cpu_cores=8,
