@@ -6,7 +6,6 @@ import (
 	"errors"
 	"io"
 	"log"
-	"time"
 
 	"github.com/google/uuid"
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -14,6 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// accept images that are no more than 1 Megabyte in size
 const maxImageSize = 1 << 20
 
 type LaptopServer struct {
@@ -53,15 +53,8 @@ func (s *LaptopServer) Create(
 		laptop.Id = id.String()
 	}
 
-	if ctx.Err() == context.Canceled {
-		log.Print("request cancelled")
-		return nil, status.Error(codes.Canceled, "request cancelled")
-	}
-
-	// request timed out
-	if ctx.Err() == context.DeadlineExceeded {
-		log.Print("deadline exceeded")
-		return nil, status.Error(codes.DeadlineExceeded, "deadline exceeded")
+	if err := contextError(ctx); err != nil {
+		return nil, err
 	}
 
 	// save the laptop to a db.
@@ -97,7 +90,7 @@ func (s *LaptopServer) SearchLaptop(
 				Laptop: laptop,
 			}
 
-			time.Sleep(time.Second)
+			// time.Sleep(time.Second)
 
 			err := stream.Send(res)
 			if err != nil {
@@ -138,6 +131,10 @@ func (s *LaptopServer) UploadImage(stream v1.LaptopService_UploadImageServer) er
 	imageSize := 0
 
 	for {
+		if err := contextError(stream.Context()); err != nil {
+			return err
+		}
+
 		log.Printf("waiting for chunk data")
 
 		req, err := stream.Recv()
@@ -148,6 +145,8 @@ func (s *LaptopServer) UploadImage(stream v1.LaptopService_UploadImageServer) er
 		if err != nil {
 			return logError(status.Errorf(codes.Unknown, "cannot receive chunk data"))
 		}
+
+		// time.Sleep(time.Second)
 
 		chunk := req.GetChunkData()
 		size := len(chunk)
@@ -186,4 +185,15 @@ func logError(err error) error {
 		log.Print(err)
 	}
 	return err
+}
+
+func contextError(ctx context.Context) error {
+	switch ctx.Err() {
+	case context.Canceled:
+		return logError(status.Error(codes.Canceled, "request cancelled"))
+	case context.DeadlineExceeded:
+		return logError(status.Error(codes.DeadlineExceeded, "deadline exceeded"))
+	default:
+		return nil
+	}
 }

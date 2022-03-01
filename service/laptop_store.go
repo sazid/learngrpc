@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/jinzhu/copier"
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -68,7 +67,6 @@ func (s *InMemoryLaptopStore) Search(
 	defer s.RUnlock()
 
 	for _, laptop := range s.data {
-		time.Sleep(time.Second)
 		log.Print("checking laptop id: ", laptop.GetId())
 		if ctx.Err() == context.Canceled {
 			log.Print("stream cancelled")
