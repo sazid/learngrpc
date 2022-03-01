@@ -16,7 +16,7 @@ import laptop_message_pb2 as laptop__message__pb2
 import filter_message_pb2 as filter__message__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14laptop_service.proto\x12\x03rpc\x1a\x14laptop_message.proto\x1a\x14\x66ilter_message.proto\"2\n\x13\x43reateLaptopRequest\x12\x1b\n\x06laptop\x18\x01 \x01(\x0b\x32\x0b.rpc.Laptop\"\"\n\x14\x43reateLaptopResponse\x12\n\n\x02id\x18\x01 \x01(\t\"2\n\x13SearchLaptopRequest\x12\x1b\n\x06\x66ilter\x18\x01 \x01(\x0b\x32\x0b.rpc.Filter\"3\n\x14SearchLaptopResponse\x12\x1b\n\x06laptop\x18\x01 \x01(\x0b\x32\x0b.rpc.Laptop2\x99\x01\n\rLaptopService\x12?\n\x06\x43reate\x12\x18.rpc.CreateLaptopRequest\x1a\x19.rpc.CreateLaptopResponse\"\x00\x12G\n\x0cSearchLaptop\x12\x18.rpc.SearchLaptopRequest\x1a\x19.rpc.SearchLaptopResponse\"\x00\x30\x01\x42\x08Z\x06\x61pi/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14laptop_service.proto\x12\x03rpc\x1a\x14laptop_message.proto\x1a\x14\x66ilter_message.proto\"2\n\x13\x43reateLaptopRequest\x12\x1b\n\x06laptop\x18\x01 \x01(\x0b\x32\x0b.rpc.Laptop\"\"\n\x14\x43reateLaptopResponse\x12\n\n\x02id\x18\x01 \x01(\t\"2\n\x13SearchLaptopRequest\x12\x1b\n\x06\x66ilter\x18\x01 \x01(\x0b\x32\x0b.rpc.Filter\"3\n\x14SearchLaptopResponse\x12\x1b\n\x06laptop\x18\x01 \x01(\x0b\x32\x0b.rpc.Laptop\"R\n\x12UploadImageRequest\x12\x1e\n\x04info\x18\x01 \x01(\x0b\x32\x0e.rpc.ImageInfoH\x00\x12\x14\n\nchunk_data\x18\x02 \x01(\x0cH\x00\x42\x06\n\x04\x64\x61ta\"2\n\tImageInfo\x12\x11\n\tlaptop_id\x18\x01 \x01(\t\x12\x12\n\nimage_type\x18\x02 \x01(\t\"/\n\x13UploadImageResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04size\x18\x02 \x01(\r2\xdf\x01\n\rLaptopService\x12?\n\x06\x43reate\x12\x18.rpc.CreateLaptopRequest\x1a\x19.rpc.CreateLaptopResponse\"\x00\x12G\n\x0cSearchLaptop\x12\x18.rpc.SearchLaptopRequest\x1a\x19.rpc.SearchLaptopResponse\"\x00\x30\x01\x12\x44\n\x0bUploadImage\x12\x17.rpc.UploadImageRequest\x1a\x18.rpc.UploadImageResponse\"\x00(\x01\x42\x08Z\x06\x61pi/v1b\x06proto3')
 
 
 
@@ -24,6 +24,9 @@ _CREATELAPTOPREQUEST = DESCRIPTOR.message_types_by_name['CreateLaptopRequest']
 _CREATELAPTOPRESPONSE = DESCRIPTOR.message_types_by_name['CreateLaptopResponse']
 _SEARCHLAPTOPREQUEST = DESCRIPTOR.message_types_by_name['SearchLaptopRequest']
 _SEARCHLAPTOPRESPONSE = DESCRIPTOR.message_types_by_name['SearchLaptopResponse']
+_UPLOADIMAGEREQUEST = DESCRIPTOR.message_types_by_name['UploadImageRequest']
+_IMAGEINFO = DESCRIPTOR.message_types_by_name['ImageInfo']
+_UPLOADIMAGERESPONSE = DESCRIPTOR.message_types_by_name['UploadImageResponse']
 CreateLaptopRequest = _reflection.GeneratedProtocolMessageType('CreateLaptopRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATELAPTOPREQUEST,
   '__module__' : 'laptop_service_pb2'
@@ -52,6 +55,27 @@ SearchLaptopResponse = _reflection.GeneratedProtocolMessageType('SearchLaptopRes
   })
 _sym_db.RegisterMessage(SearchLaptopResponse)
 
+UploadImageRequest = _reflection.GeneratedProtocolMessageType('UploadImageRequest', (_message.Message,), {
+  'DESCRIPTOR' : _UPLOADIMAGEREQUEST,
+  '__module__' : 'laptop_service_pb2'
+  # @@protoc_insertion_point(class_scope:rpc.UploadImageRequest)
+  })
+_sym_db.RegisterMessage(UploadImageRequest)
+
+ImageInfo = _reflection.GeneratedProtocolMessageType('ImageInfo', (_message.Message,), {
+  'DESCRIPTOR' : _IMAGEINFO,
+  '__module__' : 'laptop_service_pb2'
+  # @@protoc_insertion_point(class_scope:rpc.ImageInfo)
+  })
+_sym_db.RegisterMessage(ImageInfo)
+
+UploadImageResponse = _reflection.GeneratedProtocolMessageType('UploadImageResponse', (_message.Message,), {
+  'DESCRIPTOR' : _UPLOADIMAGERESPONSE,
+  '__module__' : 'laptop_service_pb2'
+  # @@protoc_insertion_point(class_scope:rpc.UploadImageResponse)
+  })
+_sym_db.RegisterMessage(UploadImageResponse)
+
 _LAPTOPSERVICE = DESCRIPTOR.services_by_name['LaptopService']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -65,6 +89,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _SEARCHLAPTOPREQUEST._serialized_end=211
   _SEARCHLAPTOPRESPONSE._serialized_start=213
   _SEARCHLAPTOPRESPONSE._serialized_end=264
-  _LAPTOPSERVICE._serialized_start=267
-  _LAPTOPSERVICE._serialized_end=420
+  _UPLOADIMAGEREQUEST._serialized_start=266
+  _UPLOADIMAGEREQUEST._serialized_end=348
+  _IMAGEINFO._serialized_start=350
+  _IMAGEINFO._serialized_end=400
+  _UPLOADIMAGERESPONSE._serialized_start=402
+  _UPLOADIMAGERESPONSE._serialized_end=449
+  _LAPTOPSERVICE._serialized_start=452
+  _LAPTOPSERVICE._serialized_end=675
 # @@protoc_insertion_point(module_scope)

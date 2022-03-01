@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"net"
+	"os"
 	"testing"
 
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -16,7 +17,11 @@ import (
 func TestClientCreateLaptop(t *testing.T) {
 	t.Parallel()
 
-	laptopServer, serverAddr := startTestLaptopServer(t)
+	tempImageStoreFolder, err := os.MkdirTemp("", "imageStore_*")
+	require.NoError(t, err)
+	defer os.RemoveAll(tempImageStoreFolder)
+
+	laptopServer, serverAddr := startTestLaptopServer(t, tempImageStoreFolder)
 	laptopClient := newTestLaptopClient(t, serverAddr)
 
 	laptop := sample.NewLaptop()
@@ -31,16 +36,17 @@ func TestClientCreateLaptop(t *testing.T) {
 	require.NotNil(t, res)
 	require.Equal(t, expectedID, res.Id)
 
-	other, err := laptopServer.store.Find(expectedID)
+	other, err := laptopServer.laptopStore.Find(expectedID)
 	require.NoError(t, err)
 	require.NotNil(t, other)
 
 	require.True(t, proto.Equal(laptop, other))
 }
 
-func startTestLaptopServer(t *testing.T) (*LaptopServer, string) {
-	store := NewInMemoryLaptopStore()
-	laptopServer := NewLaptopServer(store)
+func startTestLaptopServer(t *testing.T, imageFolder string) (*LaptopServer, string) {
+	laptopStore := NewInMemoryLaptopStore()
+	imageStore := NewDiskImageStore(imageFolder)
+	laptopServer := NewLaptopServer(laptopStore, imageStore)
 
 	grpcServer := grpc.NewServer()
 	v1.RegisterLaptopServiceServer(grpcServer, laptopServer)

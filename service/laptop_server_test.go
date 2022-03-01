@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -25,34 +26,34 @@ func TestServerCreateLaptop(t *testing.T) {
 	storeDuplicateID.Save(duplicateLaptop)
 
 	testCases := []struct {
-		name   string
-		laptop *v1.Laptop
-		store  LaptopStore
-		code   codes.Code
+		name        string
+		laptop      *v1.Laptop
+		laptopStore LaptopStore
+		code        codes.Code
 	}{
 		{
-			name:   "success_with_id",
-			laptop: sample.NewLaptop(),
-			store:  NewInMemoryLaptopStore(),
-			code:   codes.OK,
+			name:        "success_with_id",
+			laptop:      sample.NewLaptop(),
+			laptopStore: NewInMemoryLaptopStore(),
+			code:        codes.OK,
 		},
 		{
-			name:   "success_no_id",
-			laptop: laptopNoID,
-			store:  NewInMemoryLaptopStore(),
-			code:   codes.OK,
+			name:        "success_no_id",
+			laptop:      laptopNoID,
+			laptopStore: NewInMemoryLaptopStore(),
+			code:        codes.OK,
 		},
 		{
-			name:   "failure_invalid_id",
-			laptop: laptopInvalidID,
-			store:  NewInMemoryLaptopStore(),
-			code:   codes.InvalidArgument,
+			name:        "failure_invalid_id",
+			laptop:      laptopInvalidID,
+			laptopStore: NewInMemoryLaptopStore(),
+			code:        codes.InvalidArgument,
 		},
 		{
-			name:   "failure_duplicate_id",
-			laptop: duplicateLaptop,
-			store:  storeDuplicateID,
-			code:   codes.AlreadyExists,
+			name:        "failure_duplicate_id",
+			laptop:      duplicateLaptop,
+			laptopStore: storeDuplicateID,
+			code:        codes.AlreadyExists,
 		},
 	}
 
@@ -66,7 +67,12 @@ func TestServerCreateLaptop(t *testing.T) {
 				Laptop: tc.laptop,
 			}
 
-			server := NewLaptopServer(tc.store)
+			tempImageStoreFolder, err := os.MkdirTemp("", "imageStore_*")
+			require.NoError(t, err)
+			defer os.RemoveAll(tempImageStoreFolder)
+			imageStore := NewDiskImageStore(tempImageStoreFolder)
+
+			server := NewLaptopServer(tc.laptopStore, imageStore)
 			res, err := server.Create(context.Background(), req)
 			if tc.code == codes.OK {
 				require.NoError(t, err)

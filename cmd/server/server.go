@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	v1 "github.com/sazid/learngrpc/api/v1"
 	"github.com/sazid/learngrpc/service"
@@ -17,8 +18,10 @@ func main() {
 	flag.Parse()
 	log.Printf("starting server on port: %d", *port)
 
-	store := service.NewInMemoryLaptopStore()
-	laptopServer := service.NewLaptopServer(store)
+	laptopStore := service.NewInMemoryLaptopStore()
+	os.Mkdir("img", os.ModePerm)
+	imageStore := service.NewDiskImageStore("img")
+	laptopServer := service.NewLaptopServer(laptopStore, imageStore)
 	grpcServer := grpc.NewServer()
 	v1.RegisterLaptopServiceServer(grpcServer, laptopServer)
 

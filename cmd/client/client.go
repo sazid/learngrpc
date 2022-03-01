@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
 	"io"
 	"log"
+	"os"
+	"path/filepath"
 	"time"
 
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -15,8 +18,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func createLaptop(laptopClient v1.LaptopServiceClient) {
-	laptop := sample.NewLaptop()
+func createLaptop(laptopClient v1.LaptopServiceClient, laptop *v1.Laptop) {
 	req := &v1.CreateLaptopRequest{
 		Laptop: laptop,
 	}
@@ -69,6 +71,94 @@ func searchLaptop(laptopClient v1.LaptopServiceClient, filter *v1.Filter) {
 	}
 }
 
+func testCreateLaptop(laptopClient v1.LaptopServiceClient) *v1.Laptop {
+	laptop := sample.NewLaptop()
+	createLaptop(laptopClient, laptop)
+	return laptop
+}
+
+func testSearchLaptop(laptopClient v1.LaptopServiceClient) {
+	for i := 0; i < 10; i++ {
+		testCreateLaptop(laptopClient)
+	}
+
+	filter := &v1.Filter{
+		MaxPriceUsd: 3000,
+		MinCpuCores: 4,
+		MinCpuGhz:   2.5,
+		MinRam:      &v1.Memory{Value: 8, Unit: v1.Memory_GIGABYTE},
+	}
+
+	searchLaptop(laptopClient, filter)
+}
+
+func uploadImage(laptopClient v1.LaptopServiceClient, laptopID string, imagePath string) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		log.Fatal("cannot open image file: ", err)
+	}
+	defer file.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	stream, err := laptopClient.UploadImage(ctx)
+	if err != nil {
+		log.Fatal("failed to open upload stream: ", err)
+	}
+
+	req := &v1.UploadImageRequest{
+		Data: &v1.UploadImageRequest_Info{
+			Info: &v1.ImageInfo{
+				LaptopId:  laptopID,
+				ImageType: filepath.Ext(imagePath),
+			},
+		},
+	}
+	err = stream.Send(req)
+	if err != nil {
+		log.Fatal("cannot send image info: ", err, stream.RecvMsg(nil))
+	}
+
+	reader := bufio.NewReader(file)
+	buffer := make([]byte, 1024)
+
+	for {
+		n, err := reader.Read(buffer)
+		if err == io.EOF {
+			log.Print("done reading from buffer")
+			break
+		}
+		if err != nil {
+			log.Fatal("cannot read image data from disk: ", err)
+		}
+
+		req := &v1.UploadImageRequest{
+			Data: &v1.UploadImageRequest_ChunkData{
+				ChunkData: buffer[:n],
+			},
+		}
+
+		err = stream.Send(req)
+		if err != nil {
+			log.Fatal("cannot upload image data: ", err, stream.RecvMsg(nil))
+		}
+
+		log.Printf("uploaded %d bytes of data", n)
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatal("failed to get response from server: ", err)
+	}
+	log.Printf("received response with id: %s and size: %d", res.GetId(), res.GetSize())
+}
+
+func testUploadImage(laptopClient v1.LaptopServiceClient) {
+	laptop := testCreateLaptop(laptopClient)
+	uploadImage(laptopClient, laptop.GetId(), "tmp/laptop.png")
+}
+
 func main() {
 	serverAddr := flag.String("address", "", "the server address")
 	flag.Parse()
@@ -83,16 +173,6 @@ func main() {
 
 	laptopClient := v1.NewLaptopServiceClient(conn)
 
-	for i := 0; i < 10; i++ {
-		createLaptop(laptopClient)
-	}
-
-	filter := &v1.Filter{
-		MaxPriceUsd: 3000,
-		MinCpuCores: 4,
-		MinCpuGhz:   2.5,
-		MinRam:      &v1.Memory{Value: 8, Unit: v1.Memory_GIGABYTE},
-	}
-
-	searchLaptop(laptopClient, filter)
+	// testSearchLaptop(laptopClient)
+	testUploadImage(laptopClient)
 }

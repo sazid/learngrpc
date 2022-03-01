@@ -24,6 +24,11 @@ class LaptopServiceStub(object):
                 request_serializer=laptop__service__pb2.SearchLaptopRequest.SerializeToString,
                 response_deserializer=laptop__service__pb2.SearchLaptopResponse.FromString,
                 )
+        self.UploadImage = channel.stream_unary(
+                '/rpc.LaptopService/UploadImage',
+                request_serializer=laptop__service__pb2.UploadImageRequest.SerializeToString,
+                response_deserializer=laptop__service__pb2.UploadImageResponse.FromString,
+                )
 
 
 class LaptopServiceServicer(object):
@@ -41,6 +46,12 @@ class LaptopServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UploadImage(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_LaptopServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +64,11 @@ def add_LaptopServiceServicer_to_server(servicer, server):
                     servicer.SearchLaptop,
                     request_deserializer=laptop__service__pb2.SearchLaptopRequest.FromString,
                     response_serializer=laptop__service__pb2.SearchLaptopResponse.SerializeToString,
+            ),
+            'UploadImage': grpc.stream_unary_rpc_method_handler(
+                    servicer.UploadImage,
+                    request_deserializer=laptop__service__pb2.UploadImageRequest.FromString,
+                    response_serializer=laptop__service__pb2.UploadImageResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +111,22 @@ class LaptopService(object):
         return grpc.experimental.unary_stream(request, target, '/rpc.LaptopService/SearchLaptop',
             laptop__service__pb2.SearchLaptopRequest.SerializeToString,
             laptop__service__pb2.SearchLaptopResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UploadImage(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(request_iterator, target, '/rpc.LaptopService/UploadImage',
+            laptop__service__pb2.UploadImageRequest.SerializeToString,
+            laptop__service__pb2.UploadImageResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
