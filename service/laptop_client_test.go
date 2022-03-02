@@ -46,7 +46,8 @@ func TestClientCreateLaptop(t *testing.T) {
 func startTestLaptopServer(t *testing.T, imageFolder string) (*LaptopServer, string) {
 	laptopStore := NewInMemoryLaptopStore()
 	imageStore := NewDiskImageStore(imageFolder)
-	laptopServer := NewLaptopServer(laptopStore, imageStore)
+	ratingStore := NewInMemoryRatingStore()
+	laptopServer := NewLaptopServer(laptopStore, imageStore, ratingStore)
 
 	grpcServer := grpc.NewServer()
 	v1.RegisterLaptopServiceServer(grpcServer, laptopServer)

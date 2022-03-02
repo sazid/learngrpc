@@ -10,6 +10,7 @@ import (
 	v1 "github.com/sazid/learngrpc/api/v1"
 	"github.com/sazid/learngrpc/service"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -21,9 +22,13 @@ func main() {
 	laptopStore := service.NewInMemoryLaptopStore()
 	os.Mkdir("img", os.ModePerm)
 	imageStore := service.NewDiskImageStore("img")
-	laptopServer := service.NewLaptopServer(laptopStore, imageStore)
+	ratingStore := service.NewInMemoryRatingStore()
+
+	laptopServer := service.NewLaptopServer(laptopStore, imageStore, ratingStore)
+
 	grpcServer := grpc.NewServer()
 	v1.RegisterLaptopServiceServer(grpcServer, laptopServer)
+	reflection.Register(grpcServer)
 
 	addr := fmt.Sprintf("0.0.0.0:%d", *port)
 	listener, err := net.Listen("tcp", addr)

@@ -71,8 +71,9 @@ func TestServerCreateLaptop(t *testing.T) {
 			require.NoError(t, err)
 			defer os.RemoveAll(tempImageStoreFolder)
 			imageStore := NewDiskImageStore(tempImageStoreFolder)
+			ratingStore := NewInMemoryRatingStore()
 
-			server := NewLaptopServer(tc.laptopStore, imageStore)
+			server := NewLaptopServer(tc.laptopStore, imageStore, ratingStore)
 			res, err := server.Create(context.Background(), req)
 			if tc.code == codes.OK {
 				require.NoError(t, err)

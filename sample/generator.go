@@ -125,3 +125,7 @@ func NewLaptop() *v1.Laptop {
 	}
 	return laptop
 }
+
+func RandomLaptopScore() float64 {
+	return randomFloat64(1, 10)
+}

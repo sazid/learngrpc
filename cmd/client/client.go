@@ -4,10 +4,12 @@ import (
 	"bufio"
 	"context"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	v1 "github.com/sazid/learngrpc/api/v1"
@@ -159,6 +161,96 @@ func testUploadImage(laptopClient v1.LaptopServiceClient) {
 	uploadImage(laptopClient, laptop.GetId(), "tmp/laptop.png")
 }
 
+func testRateLaptop(
+	laptopClient v1.LaptopServiceClient,
+) {
+	n := 3
+	laptopIDs := make([]string, 3)
+
+	for i := 0; i < n; i++ {
+		laptop := sample.NewLaptop()
+		laptopIDs[i] = laptop.GetId()
+		createLaptop(laptopClient, laptop)
+	}
+
+	scores := make([]float64, n)
+	for {
+		fmt.Print("rate laptop (y/n)?")
+		var answer string
+		fmt.Scan(&answer)
+
+		if strings.ToLower(answer) != "y" {
+			break
+		}
+
+		for i := 0; i < n; i++ {
+			scores[i] = sample.RandomLaptopScore()
+		}
+
+		err := rateLaptop(laptopClient, laptopIDs, scores)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func rateLaptop(
+	laptopClient v1.LaptopServiceClient,
+	laptopIDs []string,
+	scores []float64,
+) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	stream, err := laptopClient.RateLaptop(ctx)
+	if err != nil {
+		return fmt.Errorf("cannot rate laptop: %w", err)
+	}
+
+	waitResponse := make(chan error)
+
+	go func() {
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				log.Print("no more responses")
+				waitResponse <- nil
+				return
+			}
+			if err != nil {
+				waitResponse <- fmt.Errorf("cannot receive stream response: %w", err)
+				return
+			}
+
+			log.Print("received response: ", res)
+		}
+	}()
+
+	for i, laptopID := range laptopIDs {
+		req := &v1.RateLaptopRequest{
+			LaptopId: laptopID,
+			Score:    scores[i],
+		}
+
+		err := stream.Send(req)
+		if err != nil {
+			return fmt.Errorf("cannot send stream request: %v - %v", err, stream.RecvMsg(nil))
+		}
+
+		log.Printf("request sent: %v", req)
+	}
+
+	// Important! The stream must be closed once we decide that we'll not be
+	// sending anymore data. Otherwise the connection will be kept alive.
+	err = stream.CloseSend()
+	if err != nil {
+		return fmt.Errorf("cannot close send: %w", err)
+	}
+
+	err = <-waitResponse
+	return err
+}
+
 func main() {
 	serverAddr := flag.String("address", "", "the server address")
 	flag.Parse()
@@ -174,5 +266,6 @@ func main() {
 	laptopClient := v1.NewLaptopServiceClient(conn)
 
 	// testSearchLaptop(laptopClient)
-	testUploadImage(laptopClient)
+	// testUploadImage(laptopClient)
+	testRateLaptop(laptopClient)
 }
