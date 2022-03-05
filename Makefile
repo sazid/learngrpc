@@ -27,3 +27,5 @@ gen:
 		--python_out=python/pb \
 		--grpc_python_out=python/pb \
 		protos/api/v1/*.proto
+
+.PHONY: gen clean server client

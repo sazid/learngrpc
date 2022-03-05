@@ -22,7 +22,6 @@ func accessibleRoles() service.AccessibleRoles {
 	mappings[laptopServicePackage+"Create"] = []string{"admin"}
 	mappings[laptopServicePackage+"UploadImage"] = []string{"admin"}
 	mappings[laptopServicePackage+"RateLaptop"] = []string{"admin", "user"}
-	log.Print(mappings)
 
 	return mappings
 }
