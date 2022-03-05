@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"sync"
@@ -10,9 +9,6 @@ import (
 	"github.com/jinzhu/copier"
 	v1 "github.com/sazid/learngrpc/api/v1"
 )
-
-var ErrAlreadyExists = errors.New("record already exists")
-var ErrNotFound = errors.New("record not found")
 
 type LaptopStore interface {
 	Save(*v1.Laptop) error
