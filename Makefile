@@ -28,4 +28,7 @@ gen:
 		--grpc_python_out=python/pb \
 		protos/api/v1/*.proto
 
-.PHONY: gen clean server client
+cert:
+	cd cert; sh ./gen.sh; cd ..
+
+.PHONY: gen clean server client cert

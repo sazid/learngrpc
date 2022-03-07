@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
@@ -11,7 +12,13 @@ import (
 	v1 "github.com/sazid/learngrpc/api/v1"
 	"github.com/sazid/learngrpc/service"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
+)
+
+const (
+	secretKey     = "secret"
+	tokenDuration = 15 * time.Minute
 )
 
 func accessibleRoles() service.AccessibleRoles {
@@ -43,10 +50,21 @@ func createUser(userStore service.UserStore, username, password, role string) er
 	return userStore.Save(user)
 }
 
-const (
-	secretKey     = "secret"
-	tokenDuration = 15 * time.Minute
-)
+func loadTLSCredentials() (credentials.TransportCredentials, error) {
+	// Load server's certificate and private key
+	serverCert, err := tls.LoadX509KeyPair("cert/server-cert.pem", "cert/server-key.pem")
+	if err != nil {
+		return nil, err
+	}
+
+	// Create the credentials and return it
+	config := &tls.Config{
+		Certificates: []tls.Certificate{serverCert},
+		ClientAuth:   tls.NoClientCert,
+	}
+
+	return credentials.NewTLS(config), nil
+}
 
 func main() {
 	port := flag.Int("port", 0, "the server port")
@@ -72,7 +90,13 @@ func main() {
 
 	authInterceptor := service.NewAuthInterceptor(jwtManager, accessibleRoles())
 
+	tlsCredentials, err := loadTLSCredentials()
+	if err != nil {
+		log.Fatal("cannot load TLS credentials: ", err)
+	}
+
 	grpcServer := grpc.NewServer(
+		grpc.Creds(tlsCredentials),
 		grpc.ChainUnaryInterceptor(
 			authInterceptor.Unary(),
 		),
